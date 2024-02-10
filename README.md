@@ -80,3 +80,95 @@ class ClassComponent extends React.Component {
   ReactDOM.render(e(LikeButton), document.querySelector('#root'));
 </script>
 ```
+
+# 1-4 가독성을 위한 JSX
+## 위 방법의 react.createElement방법은 불편하니 jsx방법이 있음
+아래는 각각의 컴포넌트 render함수의 리턴부분이다. 뭐가 다른지 보자
+```javascript
+return e('button', {onClick: () => this.setState({liked: true})}, 'Like');
+...
+<script>
+  ReactDOM.render(e(클래스명), document.querySelector('#root'));
+</script>
+```
+```javascript
+return (
+        <button onClick={() => this.setState({liked: true})}>
+          Like
+        </button>
+      );
+...
+<script type="text/babel">
+  ReactDOM.render(<클래스명/>, document.querySelector('#root'));
+</script>
+```
+그런데 이렇게 작성하면 html파서가 <>문법을 알아먹질못함 그래서 babel을 사용
+### 컴포넌트 이름은 반드시 대문자시작, jsx내부 html태그는 반드시 소문자시작
+### JSX내부 html형식 내부에서 js코드를 적을땐 반드시 중괄호{}!
+코드를 보면 obj는 2개의 중괄호인것을 유의
+```javascript
+return (
+        <button onClick={() => this.setState({liked: true})} obj={{a:'b', c:'d'}}>
+          Like {this.state.liked ? "Liked" : "Like!"}
+          {[1, 2, 3].map((i)=>{
+            return <div>i</div>;
+          })}
+        </button>
+      );
+```
+### return할땐 형제태그 병렬 불가! 무조건 부모태그(열고닫고) 1개로만 이뤄져야함
+아래는 **불가능 예제**
+```javascript
+return (
+    <button onClick={()=>{this.setState({liked:true});}}>
+    {this.state.liked? "Liked" : "Like!"}
+    </button>
+    <input type="text"/> //형제가 2명(button, input)이 나란히 return엔 불가능!
+);
+```
+이렇게 div로 감싸면 가능!
+```javascript
+return (<div>
+    <button onClick={()=>{this.setState({liked:true});}}>
+    {this.state.liked? "Liked" : "Like!"}
+    </button>
+    <input type="text"/>
+</div>
+);
+```
+이렇게 fragment로 감싸는 것도 가능!
+```javascript
+return (<>
+    <button onClick={()=>{this.setState({liked:true});}}>
+    {this.state.liked? "Liked" : "Like!"}
+    </button>
+    <input type="text"/>
+</>
+);
+```
+## babel : jsx형식 -> 고전적 react(js기반)
+html에서 script태그에 url을 줘서 포함시킬수있음
+### babel을 html에서 태그로 사용할때 : `<script type="text/bael">`을 붙여서 명시해야함
+## react18버전에서 가장 크게 달라진점 : 컴포넌트 렌더링함수[ReactDOM.render -> ReactDOM.createRoot]
+```javascript
+<script type="text/babel">
+  //ReactDOM.render(<클래스명/>, document.querySelector('#root')); //react17버전
+  ReactDOM.createRoot(document.querySelector("#root")).render(<클래스명 />); //react18버전
+</script>
+```
+취직을 해서 이부분을 확인해서 어떤 버전인지 구분해야함
+## react18에서 컴포넌트 렌더링할때, render에도 클래스이름태그를 여러개 적어서 여러개를 한번에 렌더링가능!
+```javascript
+<script type="text/babel">
+  //ReactDOM.render(<클래스명/>, document.querySelector('#root')); //react17버전
+  ReactDOM.createRoot(document.querySelector("#root")).render(
+  <div>
+    <클래스명 />
+    <클래스명 />
+    <클래스명 />
+    <클래스명 />
+    <클래스명 />
+  </div>
+  ); //react18버전
+</script>
+```
