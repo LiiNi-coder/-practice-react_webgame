@@ -10,45 +10,47 @@
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
 <script type="text/babel">
-  'use strict';
-  const GuGuDan = () => {
-    const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
-    const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
-    const [value, setValue] = React.useState('');
-    const [result, setResult] = React.useState('');
-    const inputEl = React.useRef(null);
-
-    const onSubmitForm = (e) => {
+  class GuGuDan extends React.Component{
+    constructor(props){
+      super(props);
+      //useState부분
+      this.state = {
+        first: Math.ceil(Math.random()*9),
+        second: Math.ceil(Math.random()*9),
+        value: '',
+        result: '',
+        previous_result: '',
+      };
+    }
+    onsubmit = (e)=>{
       e.preventDefault();
-      if (parseInt(value) === first * second) {
-        setResult('정답');
-        setFirst(Math.ceil(Math.random() * 9));
-        setSecond(Math.ceil(Math.random() * 9));
-        setValue('');
-        inputEl.current.focus();
-      } else {
-        setResult('땡');
-        setValue('');
-        inputEl.current.focus();
+      if(parseInt(this.state.value) === this.state.first * this.state.second){
+        this.setState({
+          result:`${this.state.first}*${this.state.second}=${this.state.value}는 정답`,
+          first: Math.ceil(Math.random()*9),
+          second: Math.ceil(Math.random()*9),
+          value: '',
+        });
+      }else{
+        this.setState({
+          result:`${this.state.first}*${this.state.second}=${this.state.value}는 땡`,
+          value: '',
+        });
       }
     };
-    return (
-      <React.Fragment>
-        <div>{first} 곱하기 {second}는?</div>
-        <form onSubmit={onSubmitForm}>
-          <input
-            ref={inputEl}
-            type="number"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          <button>입력!</button>
-        </form>
-        <div id="result">{result}</div>
-      </React.Fragment>
-    );
-  };
-
+    render(){
+      return (
+        <div>
+          <div>{this.state.first}곱하기{this.state.second}은?</div>
+          <form onSubmit={this.onsubmit}>
+            <input type="number" value={this.state.value} onChange={(e)=>{this.setState({value: e.target.value});}}/>
+            <button>입력!</button>
+          </form>
+          <div>{this.state.result}</div>
+        </div>
+      );
+    }
+  }
 </script>
 <script type="text/babel">
   ReactDOM.render(<GuGuDan/>, document.querySelector('#root'));

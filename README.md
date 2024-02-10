@@ -220,3 +220,42 @@ html에서 script태그에 url을 줘서 포함시킬수있음
 <script type="text/babel">ReactDOM.createRoot(document.querySelector("#root")).render(<LikeButton />);</script>
 ```
 ### 함수컴포넌트를 쓰면 this를 쓸필요가 없어서 좋다
+# 1-7 구구단 리액트 만들기
+1.구구단의 Gugudan.html에서 작업, 현재 이전 계산결과와 함께 정답유무를 같이 보여주도록 수정함.
+## state란 변하는 모든것이다. gui효과도 state, 내부 글자바뀌는것도 state 죄다 state로 생각해야함!
+### 왜 이 코드의 입력부분에 글씨를 입력할수없을까? (해답: input에 사용자가 글치는것도 state! => 관리필요)
+```javascript
+<script type="text/babel">
+  class GuGuDan extends React.Component{
+    constructor(props){
+      super(props);
+      //useState부분
+      this.state = {
+        first: Math.ceil(Math.random()*9),
+        second: Math.ceil(Math.random()*9),
+        value: '',
+        result: '',
+      };
+    }
+
+    render(){
+      return (
+        <div>
+          <div>{this.state.first}곱하기{this.state.second}은?</div>
+          <form>
+            <input type="number" value={this.state.value}/>
+            <button>입력!</button>
+          </form>
+          <div>{this.state.result}</div>
+        </div>
+      );
+    }
+  }
+</script>
+```
+> input의 value가 리액트의 state값이라, 화면에 보여지는 input스트링은 무조건 state로 덮어씌워져있어서, 사용자가 아무리 입력을해도 state가 바뀌지 않기때문
+**따라서 input의 onChange이벤트를 통해 state값을 갱신시켜줘야함!**
+```javascript
+//<input type="number" value={this.state.value})}}/>
+<input type="number" value={this.state.value} onChange={(e)=>{this.setState({value: e.target.value})}}/>
+```
