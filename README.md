@@ -172,3 +172,16 @@ html에서 script태그에 url을 줘서 포함시킬수있음
   ); //react18버전
 </script>
 ```
+# 1-5 클래스 컴포넌트의 형태와 리액트 데브툴즈
+## setState로 state를 변경해야한다
+### 객체를 함부로 바꾸지마라(불변성), 객체는 복사해서 써라
+```javascript
+<button onClick={()=>{
+    //this.state.liked = true; //잘못된예시
+    setState({liked : true});
+}}>
+</button>
+```
+### 불변성 유지하는 배열객체메소드
+- pop, push, shift, unshift, splice : 배열을 직접적으로 수정(불변성깨지니까 쓰면안됨)
+- concat, slice : 새로운 배열 만들어냄
