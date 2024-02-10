@@ -185,3 +185,38 @@ html에서 script태그에 url을 줘서 포함시킬수있음
 ### 불변성 유지하는 배열객체메소드
 - pop, push, shift, unshift, splice : 배열을 직접적으로 수정(불변성깨지니까 쓰면안됨)
 - concat, slice : 새로운 배열 만들어냄
+# 1-6 함수형 컴포넌트
+## useState : 스테이트 선언 및 변경함수까지 네이밍
+```javascript
+<script type="text/babel">
+  "use strict";
+  funtion LikeButton(){
+    const [liked, setLiked] = React.useState(false);
+    if(liked){
+      return "You Liked this";
+    }
+    return (
+      <button onClick={()=>{setLiked(true);}}>Like</button>;
+    );
+  }
+</script>
+...
+<script type="text/babel">ReactDOM.createRoot(document.querySelector("#root")).render(<LikeButton />);</script>
+```
+```javascript
+<script type="text/babel">
+  "use strict";
+  const LikeButton = ()=>{
+    const [liked, setLiked] = React.useState(false);
+    if(liked){
+      return "You Liked this";
+    }
+    return (
+      <button onClick={()=>{setLiked(true);}}>Like</button>;
+    );
+  }
+</script>
+...
+<script type="text/babel">ReactDOM.createRoot(document.querySelector("#root")).render(<LikeButton />);</script>
+```
+### 함수컴포넌트를 쓰면 this를 쓸필요가 없어서 좋다
